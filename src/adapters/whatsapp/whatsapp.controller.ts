@@ -13,6 +13,7 @@ import type { Response } from 'express';
 import { ResponseHttp } from '../../core/common/entity/response-http.model';
 import { CreateSessionUseCase } from '../../core/whatsapp/use-cases/create-session.uc';
 import { QuerySessionsUseCase } from '../../core/whatsapp/use-cases/query-sessions.uc';
+import { SendMessageByReferenceUseCase } from '../../core/whatsapp/use-cases/send-message-by-reference.uc';
 import { SendMessageUseCase } from '../../core/whatsapp/use-cases/send-message.uc';
 import { CreateSessionDto } from './dto/create-session.dto';
 import { FilterSessionDto } from './dto/filter-session.dto';
@@ -24,6 +25,7 @@ export class WhatsappController {
   constructor(
     private readonly createSessionUseCase: CreateSessionUseCase,
     private readonly sendMessageUseCase: SendMessageUseCase,
+    private readonly sendMessageByReferenceUseCase: SendMessageByReferenceUseCase,
     private readonly querySessionsUseCase: QuerySessionsUseCase,
   ) {}
 
@@ -67,6 +69,22 @@ export class WhatsappController {
     @Body() dto: SendMessageDto,
   ): Promise<ResponseHttp> {
     const result = await this.sendMessageUseCase.execute({ sessionId, ...dto });
+    return new ResponseHttp(result.status, result);
+  }
+
+  @Post('by-reference/:referenceId/message')
+  @ApiOperation({
+    summary:
+      'Envía un mensaje usando el referenceId del tenant; usa su primera sesión CONNECTED automáticamente',
+  })
+  async sendMessageByReference(
+    @Param('referenceId') referenceId: string,
+    @Body() dto: SendMessageDto,
+  ): Promise<ResponseHttp> {
+    const result = await this.sendMessageByReferenceUseCase.execute({
+      referenceId,
+      ...dto,
+    });
     return new ResponseHttp(result.status, result);
   }
 }

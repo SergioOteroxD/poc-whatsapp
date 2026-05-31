@@ -5,6 +5,7 @@ import { CreateTenantUseCase } from './auth/use-cases/create-tenant.uc';
 import { ValidateApiKeyUseCase } from './auth/use-cases/validate-api-key.uc';
 import { CreateSessionUseCase } from './whatsapp/use-cases/create-session.uc';
 import { QuerySessionsUseCase } from './whatsapp/use-cases/query-sessions.uc';
+import { SendMessageByReferenceUseCase } from './whatsapp/use-cases/send-message-by-reference.uc';
 import { SendMessageUseCase } from './whatsapp/use-cases/send-message.uc';
 
 @Module({
@@ -12,6 +13,7 @@ import { SendMessageUseCase } from './whatsapp/use-cases/send-message.uc';
   providers: [
     CreateSessionUseCase,
     SendMessageUseCase,
+    SendMessageByReferenceUseCase,
     QuerySessionsUseCase,
     CreateTenantUseCase,
     CreateApiKeyUseCase,
@@ -20,6 +22,7 @@ import { SendMessageUseCase } from './whatsapp/use-cases/send-message.uc';
   exports: [
     CreateSessionUseCase,
     SendMessageUseCase,
+    SendMessageByReferenceUseCase,
     QuerySessionsUseCase,
     CreateTenantUseCase,
     CreateApiKeyUseCase,
