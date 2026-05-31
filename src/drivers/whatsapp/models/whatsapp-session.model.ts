@@ -6,12 +6,15 @@ import {
   CreateDateColumn,
   Entity,
   Index,
+  JoinColumn,
+  ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { EWhatsappSessionStatus } from '../../../commons/enum/whatsapp/whatsapp-session-status.enum';
+import { Tenant } from '../../auth/models/tenant.model';
 import { WaAuthCreds } from './wa-auth-creds.model';
 import { WaAuthState } from './wa-auth-state.model';
 import { WhatsappContact } from './whatsapp-contact.model';
@@ -55,6 +58,12 @@ export class WhatsappSession {
 
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
   updatedAt!: Date;
+
+  @ManyToOne(() => Tenant, (tenant) => tenant.sessions, {
+    onDelete: 'RESTRICT',
+  })
+  @JoinColumn({ name: 'tenant_id' })
+  tenant!: Tenant;
 
   @OneToOne(() => WaAuthCreds, (creds) => creds.session)
   authCreds!: WaAuthCreds;

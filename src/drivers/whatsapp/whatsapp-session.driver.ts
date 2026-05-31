@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, FindOptionsWhere, Repository } from 'typeorm';
+import { IwhatsappSessionFilter } from '../../core/whatsapp/entity/whatsapp-session.entity';
 import { EWhatsappSessionStatus } from '../../commons/enum/whatsapp/whatsapp-session-status.enum';
 import { WhatsappSession } from './models/whatsapp-session.model';
 
@@ -28,6 +29,23 @@ export class WhatsappSessionDriver {
     phoneNumber: string,
   ): Promise<WhatsappSession | null> {
     return this.sessionRepo.findOne({ where: { tenantId, phoneNumber } });
+  }
+
+  async findAll(
+    filter: IwhatsappSessionFilter,
+  ): Promise<[WhatsappSession[], number]> {
+    const { tenantId, phoneNumber, status, page = 1, limit = 10 } = filter;
+    const where: FindOptionsWhere<WhatsappSession> = {};
+    if (tenantId) where.tenantId = tenantId;
+    if (phoneNumber) where.phoneNumber = phoneNumber;
+    if (status) where.status = status;
+
+    return this.sessionRepo.findAndCount({
+      where,
+      skip: (page - 1) * limit,
+      take: limit,
+      order: { createdAt: 'DESC' },
+    });
   }
 
   async findAllConnected(): Promise<WhatsappSession[]> {

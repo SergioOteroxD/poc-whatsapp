@@ -1,17 +1,21 @@
 import {
   Body,
   Controller,
+  Get,
   Param,
   ParseIntPipe,
   Post,
+  Query,
   Res,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import type { Response } from 'express';
 import { ResponseHttp } from '../../core/common/entity/response-http.model';
 import { CreateSessionUseCase } from '../../core/whatsapp/use-cases/create-session.uc';
+import { QuerySessionsUseCase } from '../../core/whatsapp/use-cases/query-sessions.uc';
 import { SendMessageUseCase } from '../../core/whatsapp/use-cases/send-message.uc';
 import { CreateSessionDto } from './dto/create-session.dto';
+import { FilterSessionDto } from './dto/filter-session.dto';
 import { SendMessageDto } from './dto/send-message.dto';
 
 @ApiTags('WhatsApp')
@@ -20,7 +24,18 @@ export class WhatsappController {
   constructor(
     private readonly createSessionUseCase: CreateSessionUseCase,
     private readonly sendMessageUseCase: SendMessageUseCase,
+    private readonly querySessionsUseCase: QuerySessionsUseCase,
   ) {}
+
+  @Get('session')
+  @ApiOperation({
+    summary:
+      'Lista sesiones de WhatsApp con filtro opcional por status, tenant y teléfono',
+  })
+  async getSessions(@Query() filter: FilterSessionDto): Promise<ResponseHttp> {
+    const result = await this.querySessionsUseCase.execute(filter);
+    return new ResponseHttp(result.status, result);
+  }
 
   @Post('session')
   @ApiOperation({

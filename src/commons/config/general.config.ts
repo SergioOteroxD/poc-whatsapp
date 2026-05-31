@@ -9,5 +9,7 @@ export default registerAs('general', () => ({
   SECRET_JWT: process.env.SECRET_JWT,
   EXPIRES_JWT: process.env.EXPIRES_JWT || '2d',
 
+  API_KEY_PREFIX: process.env.API_KEY_PREFIX ?? 'biz_',
+
   CRON_DAILY_METRICS: process.env.CRON_DAILY_METRICS || '0 2 * * *',
 }));

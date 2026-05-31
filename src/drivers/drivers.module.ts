@@ -1,6 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ApiKey } from './auth/models/api-key.model';
+import { Tenant } from './auth/models/tenant.model';
+import { ApiKeyDriver } from './auth/api-key.driver';
+import { TenantDriver } from './auth/tenant.driver';
 import { WaAuthCreds } from './whatsapp/models/wa-auth-creds.model';
 import { WaAuthState } from './whatsapp/models/wa-auth-state.model';
 import { WhatsappContact } from './whatsapp/models/whatsapp-contact.model';
@@ -24,6 +28,8 @@ const whatsappModels = [
   WhatsappWebhookLog,
 ];
 
+const authModels = [Tenant, ApiKey];
+
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
@@ -36,12 +42,12 @@ const whatsappModels = [
         username: config.get<string>('database.postgres.user'),
         password: config.get<string>('database.postgres.pw'),
         database: config.get<string>('database.postgres.db'),
-        entities: whatsappModels,
+        entities: [...whatsappModels, ...authModels],
         synchronize: true,
         logging: config.get<string>('general.NODE_ENV') === 'development',
       }),
     }),
-    TypeOrmModule.forFeature(whatsappModels),
+    TypeOrmModule.forFeature([...whatsappModels, ...authModels]),
   ],
   providers: [
     WhatsappAuthDriver,
@@ -49,6 +55,8 @@ const whatsappModels = [
     WhatsappSessionDriver,
     WhatsappSocketDriver,
     WhatsappWebhookDriver,
+    TenantDriver,
+    ApiKeyDriver,
   ],
   exports: [
     WhatsappAuthDriver,
@@ -56,6 +64,8 @@ const whatsappModels = [
     WhatsappSessionDriver,
     WhatsappSocketDriver,
     WhatsappWebhookDriver,
+    TenantDriver,
+    ApiKeyDriver,
   ],
 })
 export class DriversModule {}
