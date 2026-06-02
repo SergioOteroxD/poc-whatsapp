@@ -7,6 +7,7 @@ import { WhatsappSocketDriver } from '../../../drivers/whatsapp/whatsapp-socket.
 import { EWhatsappSessionStatus } from '../../../commons/enum/whatsapp/whatsapp-session-status.enum';
 
 export interface ISendMessageByReferenceInput {
+  tenantId: number;
   referenceId: string;
   jid: string;
   message: string;
@@ -29,6 +30,10 @@ export class SendMessageByReferenceUseCase {
         return new ResponseBase(RESPONSE_CODE.NOT_FOUND);
       }
 
+      if (tenant.id !== input.tenantId) {
+        return new ResponseBase(RESPONSE_CODE.FORBIDDEN);
+      }
+
       const [sessions] = await this.sessionDriver.findAll({
         tenantId: tenant.id,
         status: EWhatsappSessionStatus.CONNECTED,
@@ -36,7 +41,7 @@ export class SendMessageByReferenceUseCase {
         limit: 1,
       });
 
-      if (!sessions.length) {
+      if (sessions.length == 0) {
         return new ResponseBase(RESPONSE_CODE.ERROR, {
           error: 'El tenant no tiene ninguna sesión activa de WhatsApp.',
         } as any);

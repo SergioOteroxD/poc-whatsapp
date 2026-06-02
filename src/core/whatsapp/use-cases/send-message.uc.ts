@@ -6,6 +6,7 @@ import { WhatsappSocketDriver } from '../../../drivers/whatsapp/whatsapp-socket.
 
 export interface ISendMessageInput {
   sessionId: number;
+  tenantId: number;
   jid: string;
   message: string;
 }
@@ -22,6 +23,10 @@ export class SendMessageUseCase {
       const session = await this.sessionDriver.findById(input.sessionId);
       if (!session) {
         return new ResponseBase(RESPONSE_CODE.NOT_FOUND);
+      }
+
+      if (session.tenantId !== input.tenantId) {
+        return new ResponseBase(RESPONSE_CODE.FORBIDDEN);
       }
 
       if (!this.socketDriver.isConnected(input.sessionId)) {

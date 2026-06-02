@@ -4,7 +4,9 @@ import { CreateApiKeyUseCase } from './auth/use-cases/create-api-key.uc';
 import { CreateTenantUseCase } from './auth/use-cases/create-tenant.uc';
 import { ValidateApiKeyUseCase } from './auth/use-cases/validate-api-key.uc';
 import { CreateSessionUseCase } from './whatsapp/use-cases/create-session.uc';
+import { CreateWebhookUseCase } from './whatsapp/use-cases/create-webhook.uc';
 import { QuerySessionsUseCase } from './whatsapp/use-cases/query-sessions.uc';
+import { QueryWebhooksUseCase } from './whatsapp/use-cases/query-webhooks.uc';
 import { SendMessageByReferenceUseCase } from './whatsapp/use-cases/send-message-by-reference.uc';
 import { SendMessageUseCase } from './whatsapp/use-cases/send-message.uc';
 
@@ -15,6 +17,8 @@ import { SendMessageUseCase } from './whatsapp/use-cases/send-message.uc';
     SendMessageUseCase,
     SendMessageByReferenceUseCase,
     QuerySessionsUseCase,
+    CreateWebhookUseCase,
+    QueryWebhooksUseCase,
     CreateTenantUseCase,
     CreateApiKeyUseCase,
     ValidateApiKeyUseCase,
@@ -24,6 +28,8 @@ import { SendMessageUseCase } from './whatsapp/use-cases/send-message.uc';
     SendMessageUseCase,
     SendMessageByReferenceUseCase,
     QuerySessionsUseCase,
+    CreateWebhookUseCase,
+    QueryWebhooksUseCase,
     CreateTenantUseCase,
     CreateApiKeyUseCase,
     ValidateApiKeyUseCase,
