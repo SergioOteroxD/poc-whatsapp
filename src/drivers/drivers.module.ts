@@ -3,8 +3,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApiKey } from './auth/models/api-key.model';
 import { Tenant } from './auth/models/tenant.model';
+import { Collaborator } from './auth/models/collaborator.model';
+import { CollaboratorSession } from './auth/models/collaborator-session.model';
 import { ApiKeyDriver } from './auth/api-key.driver';
 import { TenantDriver } from './auth/tenant.driver';
+import { CollaboratorDriver } from './auth/collaborator.driver';
+import { CollaboratorSessionDriver } from './auth/collaborator-session.driver';
 import { WaAuthCreds } from './whatsapp/models/wa-auth-creds.model';
 import { WaAuthState } from './whatsapp/models/wa-auth-state.model';
 import { WhatsappContact } from './whatsapp/models/whatsapp-contact.model';
@@ -28,7 +32,7 @@ const whatsappModels = [
   WhatsappWebhookLog,
 ];
 
-const authModels = [Tenant, ApiKey];
+const authModels = [Tenant, ApiKey, Collaborator, CollaboratorSession];
 
 @Module({
   imports: [
@@ -57,6 +61,8 @@ const authModels = [Tenant, ApiKey];
     WhatsappWebhookDriver,
     TenantDriver,
     ApiKeyDriver,
+    CollaboratorDriver,
+    CollaboratorSessionDriver,
   ],
   exports: [
     WhatsappAuthDriver,
@@ -66,6 +72,8 @@ const authModels = [Tenant, ApiKey];
     WhatsappWebhookDriver,
     TenantDriver,
     ApiKeyDriver,
+    CollaboratorDriver,
+    CollaboratorSessionDriver,
   ],
 })
 export class DriversModule {}
