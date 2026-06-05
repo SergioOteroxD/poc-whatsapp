@@ -1,13 +1,17 @@
-import { Body, Controller, Post, Req } from '@nestjs/common';
+import { Body, Controller, Delete, Param, Post, Req, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Request } from 'express';
 import { ResponseHttp } from '../../core/common/entity/response-http.model';
 import { CreateTenantUseCase } from '../../core/auth/use-cases/create-tenant.uc';
 import { CreateApiKeyUseCase } from '../../core/auth/use-cases/create-api-key.uc';
 import { LoginCollaboratorUseCase } from '../../core/auth/use-cases/login-collaborator.uc';
+import { RevokeSessionUseCase } from '../../core/auth/use-cases/revoke-session.uc';
 import { CreateTenantDto } from './dto/create-tenant.dto';
 import { CreateApiKeyDto } from './dto/create-api-key.dto';
 import { LoginCollaboratorDto } from './dto/login-collaborator.dto';
+import { JwtAuthGuard } from '../lib/jwt-auth.guard';
+import { CollaboratorContext } from '../lib/collaborator-context.decorator';
+import { IcollaboratorContext } from '../../core/auth/entity/collaborator.entity';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -16,6 +20,7 @@ export class AuthController {
     private readonly createTenantUseCase: CreateTenantUseCase,
     private readonly createApiKeyUseCase: CreateApiKeyUseCase,
     private readonly loginCollaboratorUseCase: LoginCollaboratorUseCase,
+    private readonly revokeSessionUseCase: RevokeSessionUseCase,
   ) {}
 
   @Post('tenants')
@@ -58,6 +63,22 @@ export class AuthController {
       deviceInfo: userAgent ? { userAgent } : null,
     });
 
+    return new ResponseHttp(result.status, result);
+  }
+
+  @Delete('collaborators/sessions/:sessionId')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({
+    summary: 'Revoca la sesión activa del colaborador autenticado (logout)',
+  })
+  async revokeSession(
+    @Param('sessionId') sessionId: string,
+    @CollaboratorContext() collaboratorContext: IcollaboratorContext,
+  ): Promise<ResponseHttp> {
+    const result = await this.revokeSessionUseCase.execute({
+      sessionId: Number(sessionId),
+      collaboratorId: collaboratorContext.collaboratorId,
+    });
     return new ResponseHttp(result.status, result);
   }
 }
