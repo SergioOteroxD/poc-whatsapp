@@ -5,6 +5,7 @@ import { CreateTenantUseCase } from './auth/use-cases/create-tenant.uc';
 import { ValidateApiKeyUseCase } from './auth/use-cases/validate-api-key.uc';
 import { ValidateJwtUseCase } from './auth/use-cases/validate-jwt.uc';
 import { LoginCollaboratorUseCase } from './auth/use-cases/login-collaborator.uc';
+import { RefreshTokenUseCase } from './auth/use-cases/refresh-token.uc';
 import { RevokeSessionUseCase } from './auth/use-cases/revoke-session.uc';
 import { CreateSessionUseCase } from './whatsapp/use-cases/create-session.uc';
 import { CreateWebhookUseCase } from './whatsapp/use-cases/create-webhook.uc';
@@ -27,6 +28,7 @@ import { SendMessageUseCase } from './whatsapp/use-cases/send-message.uc';
     ValidateApiKeyUseCase,
     ValidateJwtUseCase,
     LoginCollaboratorUseCase,
+    RefreshTokenUseCase,
     RevokeSessionUseCase,
   ],
   exports: [
@@ -41,6 +43,7 @@ import { SendMessageUseCase } from './whatsapp/use-cases/send-message.uc';
     ValidateApiKeyUseCase,
     ValidateJwtUseCase,
     LoginCollaboratorUseCase,
+    RefreshTokenUseCase,
     RevokeSessionUseCase,
   ],
 })
