@@ -3,6 +3,7 @@ import { DriversModule } from '../drivers/drivers.module';
 import { CreateApiKeyUseCase } from './auth/use-cases/create-api-key.uc';
 import { CreateTenantUseCase } from './auth/use-cases/create-tenant.uc';
 import { ValidateApiKeyUseCase } from './auth/use-cases/validate-api-key.uc';
+import { ValidateJwtUseCase } from './auth/use-cases/validate-jwt.uc';
 import { CreateSessionUseCase } from './whatsapp/use-cases/create-session.uc';
 import { CreateWebhookUseCase } from './whatsapp/use-cases/create-webhook.uc';
 import { QuerySessionsUseCase } from './whatsapp/use-cases/query-sessions.uc';
@@ -22,6 +23,7 @@ import { SendMessageUseCase } from './whatsapp/use-cases/send-message.uc';
     CreateTenantUseCase,
     CreateApiKeyUseCase,
     ValidateApiKeyUseCase,
+    ValidateJwtUseCase,
   ],
   exports: [
     CreateSessionUseCase,
@@ -33,6 +35,7 @@ import { SendMessageUseCase } from './whatsapp/use-cases/send-message.uc';
     CreateTenantUseCase,
     CreateApiKeyUseCase,
     ValidateApiKeyUseCase,
+    ValidateJwtUseCase,
   ],
 })
 export class CoreModule {}
