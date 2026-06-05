@@ -57,11 +57,12 @@ export class LoginCollaboratorUseCase {
       };
       const accessToken = this.jwtService.sign(jwtPayload);
 
-      // 5. Generar refreshToken opaco y hashear con argon2
+      // 5. Generar refreshToken opaco y almacenar hash SHA-256 (determinístico para lookup)
       const refreshToken = crypto.randomBytes(40).toString('hex');
-      const refreshTokenHash = await argon2.hash(refreshToken, {
-        type: argon2.argon2id,
-      });
+      const refreshTokenHash = crypto
+        .createHash('sha256')
+        .update(refreshToken)
+        .digest('hex');
 
       // 6. Calcular expiresAt para la sesión (7 días)
       const expiresAt = new Date();

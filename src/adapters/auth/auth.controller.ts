@@ -5,9 +5,11 @@ import { ResponseHttp } from '../../core/common/entity/response-http.model';
 import { CreateTenantUseCase } from '../../core/auth/use-cases/create-tenant.uc';
 import { CreateApiKeyUseCase } from '../../core/auth/use-cases/create-api-key.uc';
 import { LoginCollaboratorUseCase } from '../../core/auth/use-cases/login-collaborator.uc';
+import { RefreshTokenUseCase } from '../../core/auth/use-cases/refresh-token.uc';
 import { CreateTenantDto } from './dto/create-tenant.dto';
 import { CreateApiKeyDto } from './dto/create-api-key.dto';
 import { LoginCollaboratorDto } from './dto/login-collaborator.dto';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -16,6 +18,7 @@ export class AuthController {
     private readonly createTenantUseCase: CreateTenantUseCase,
     private readonly createApiKeyUseCase: CreateApiKeyUseCase,
     private readonly loginCollaboratorUseCase: LoginCollaboratorUseCase,
+    private readonly refreshTokenUseCase: RefreshTokenUseCase,
   ) {}
 
   @Post('tenants')
@@ -58,6 +61,15 @@ export class AuthController {
       deviceInfo: userAgent ? { userAgent } : null,
     });
 
+    return new ResponseHttp(result.status, result);
+  }
+
+  @Post('collaborators/refresh')
+  @ApiOperation({
+    summary: 'Rota el refreshToken — revoca el anterior y emite un nuevo par de tokens',
+  })
+  async refreshToken(@Body() dto: RefreshTokenDto): Promise<ResponseHttp> {
+    const result = await this.refreshTokenUseCase.execute(dto.refreshToken);
     return new ResponseHttp(result.status, result);
   }
 }
