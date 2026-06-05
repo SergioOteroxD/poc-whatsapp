@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { CoreModule } from '../core/core.module';
 import { AuthController } from './auth/auth.controller';
+import { CollaboratorController } from './auth/collaborator.controller';
 import { ApiKeyGuard } from './lib/api-key.guard';
 import { JwtAuthGuard } from './lib/jwt-auth.guard';
 import { ExceptionManager } from './lib/exceptions-manager.filter';
@@ -22,6 +23,6 @@ import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
     ApiKeyGuard,
     JwtAuthGuard,
   ],
-  controllers: [WhatsappController, AuthController],
+  controllers: [WhatsappController, AuthController, CollaboratorController],
 })
 export class AdaptersModule {}
