@@ -304,10 +304,16 @@ export class WhatsappSocketDriver implements OnModuleInit {
     jid: string,
     text: string,
   ): Promise<void> {
-    const sock = this.sockets.get(sessionId);
+    const sock = this.sockets.get(Number(sessionId));
     if (!sock) {
       throw new Error(`No hay socket activo para la sesión ${sessionId}`);
     }
+
+    await sock.presenceSubscribe(jid);
+    await sock.sendPresenceUpdate('composing', jid);
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+    await sock.sendPresenceUpdate('paused', jid);
+
     await sock.sendMessage(jid, { text });
   }
 

@@ -7,10 +7,13 @@ export class SendMessageDto {
     description: 'JID de WhatsApp del destinatario',
   })
   @IsString()
-  jid: string;
+  jid!: string;
 
-  @ApiProperty({ example: 'Hola desde BizzChat!', description: 'Texto del mensaje' })
+  @ApiProperty({
+    example: 'Hola desde BizzChat!',
+    description: 'Texto del mensaje',
+  })
   @IsString()
   @MinLength(1)
-  message: string;
+  message!: string;
 }

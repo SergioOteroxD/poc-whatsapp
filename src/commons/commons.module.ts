@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { validate } from './config/env.validation';
 import databaseConfig from './config/database.config';
 import generalConfig from './config/general.config';
+import jwtConfig from './config/jwt.config';
 
 @Module({
   imports: [
@@ -10,7 +11,7 @@ import generalConfig from './config/general.config';
       validate,
       isGlobal: true,
       cache: true,
-      load: [generalConfig, databaseConfig],
+      load: [generalConfig, databaseConfig, jwtConfig],
       expandVariables: true,
     }),
   ],

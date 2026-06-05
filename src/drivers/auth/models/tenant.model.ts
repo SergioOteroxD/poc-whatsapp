@@ -20,7 +20,7 @@ export class Tenant {
   @Column('varchar', { name: 'name', length: 255 })
   name!: string;
 
-  @Column('varchar', { name: 'reference_id', length: 255, unique: true })
+  @Column('varchar', { name: 'reference_id', length: 255, nullable:true })
   referenceId!: string;
 
   @Column('varchar', { name: 'email', length: 255, unique: true })

@@ -6,6 +6,20 @@ import { EWhatsappWebhookStatus } from '../../commons/enum/whatsapp/whatsapp-web
 import { WhatsappWebhook } from './models/whatsapp-webhook.model';
 import { WhatsappWebhookLog } from './models/whatsapp-webhook-log.model';
 
+interface IwebhookCreateInput {
+  sessionId: number;
+  url: string;
+  secret?: string | null;
+  events: EWhatsappWebhookEvent[];
+}
+
+interface IwebhookFindAllInput {
+  sessionId: number;
+  isActive?: boolean;
+  page?: number;
+  limit?: number;
+}
+
 @Injectable()
 export class WhatsappWebhookDriver {
   private readonly webhookRepo: Repository<WhatsappWebhook>;
@@ -14,6 +28,33 @@ export class WhatsappWebhookDriver {
   constructor(private readonly dataSource: DataSource) {
     this.webhookRepo = this.dataSource.getRepository(WhatsappWebhook);
     this.logRepo = this.dataSource.getRepository(WhatsappWebhookLog);
+  }
+
+  async create(data: IwebhookCreateInput): Promise<WhatsappWebhook> {
+    const entity = this.webhookRepo.create({
+      sessionId: data.sessionId,
+      url: data.url,
+      secret: data.secret ?? null,
+      events: data.events,
+    });
+    return this.webhookRepo.save(entity);
+  }
+
+  async findAll(filter: IwebhookFindAllInput): Promise<[WhatsappWebhook[], number]> {
+    const { sessionId, isActive, page = 1, limit = 10 } = filter;
+    const qb = this.webhookRepo
+      .createQueryBuilder('w')
+      .where('w.sessionId = :sessionId', { sessionId });
+
+    if (isActive !== undefined) {
+      qb.andWhere('w.isActive = :isActive', { isActive });
+    }
+
+    return qb
+      .orderBy('w.createdAt', 'DESC')
+      .skip((page - 1) * limit)
+      .take(limit)
+      .getManyAndCount();
   }
 
   async findActiveBySessionAndEvent(
