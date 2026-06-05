@@ -4,6 +4,7 @@ import { CreateApiKeyUseCase } from './auth/use-cases/create-api-key.uc';
 import { CreateTenantUseCase } from './auth/use-cases/create-tenant.uc';
 import { ValidateApiKeyUseCase } from './auth/use-cases/validate-api-key.uc';
 import { ValidateJwtUseCase } from './auth/use-cases/validate-jwt.uc';
+import { LoginCollaboratorUseCase } from './auth/use-cases/login-collaborator.uc';
 import { CreateSessionUseCase } from './whatsapp/use-cases/create-session.uc';
 import { CreateWebhookUseCase } from './whatsapp/use-cases/create-webhook.uc';
 import { QuerySessionsUseCase } from './whatsapp/use-cases/query-sessions.uc';
@@ -24,6 +25,7 @@ import { SendMessageUseCase } from './whatsapp/use-cases/send-message.uc';
     CreateApiKeyUseCase,
     ValidateApiKeyUseCase,
     ValidateJwtUseCase,
+    LoginCollaboratorUseCase,
   ],
   exports: [
     CreateSessionUseCase,
@@ -36,6 +38,7 @@ import { SendMessageUseCase } from './whatsapp/use-cases/send-message.uc';
     CreateApiKeyUseCase,
     ValidateApiKeyUseCase,
     ValidateJwtUseCase,
+    LoginCollaboratorUseCase,
   ],
 })
 export class CoreModule {}

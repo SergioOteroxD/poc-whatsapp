@@ -1,10 +1,13 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Req } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Request } from 'express';
 import { ResponseHttp } from '../../core/common/entity/response-http.model';
 import { CreateTenantUseCase } from '../../core/auth/use-cases/create-tenant.uc';
 import { CreateApiKeyUseCase } from '../../core/auth/use-cases/create-api-key.uc';
+import { LoginCollaboratorUseCase } from '../../core/auth/use-cases/login-collaborator.uc';
 import { CreateTenantDto } from './dto/create-tenant.dto';
 import { CreateApiKeyDto } from './dto/create-api-key.dto';
+import { LoginCollaboratorDto } from './dto/login-collaborator.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -12,6 +15,7 @@ export class AuthController {
   constructor(
     private readonly createTenantUseCase: CreateTenantUseCase,
     private readonly createApiKeyUseCase: CreateApiKeyUseCase,
+    private readonly loginCollaboratorUseCase: LoginCollaboratorUseCase,
   ) {}
 
   @Post('tenants')
@@ -27,6 +31,33 @@ export class AuthController {
   })
   async createApiKey(@Body() dto: CreateApiKeyDto): Promise<ResponseHttp> {
     const result = await this.createApiKeyUseCase.execute(dto);
+    return new ResponseHttp(result.status, result);
+  }
+
+  @Post('collaborators/login')
+  @ApiOperation({
+    summary: 'Login de colaborador — retorna accessToken (15 min) y refreshToken (7 días)',
+  })
+  async loginCollaborator(
+    @Body() dto: LoginCollaboratorDto,
+    @Req() req: Request,
+  ): Promise<ResponseHttp> {
+    const forwarded = req.headers['x-forwarded-for'];
+    const ipAddress =
+      (Array.isArray(forwarded) ? forwarded[0] : forwarded) ??
+      req.socket?.remoteAddress ??
+      null;
+
+    const userAgent = req.headers['user-agent'] ?? undefined;
+
+    const result = await this.loginCollaboratorUseCase.execute({
+      tenantId: dto.tenantId,
+      email: dto.email,
+      password: dto.password,
+      ipAddress: ipAddress ?? null,
+      deviceInfo: userAgent ? { userAgent } : null,
+    });
+
     return new ResponseHttp(result.status, result);
   }
 }
