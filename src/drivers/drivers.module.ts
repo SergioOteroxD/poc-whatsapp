@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtModule, JwtSignOptions } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApiKey } from './auth/models/api-key.model';
 import { Tenant } from './auth/models/tenant.model';
@@ -52,6 +53,17 @@ const authModels = [Tenant, ApiKey, Collaborator, CollaboratorSession];
       }),
     }),
     TypeOrmModule.forFeature([...whatsappModels, ...authModels]),
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        secret: config.get<string>('jwt.secret'),
+        signOptions: {
+          expiresIn: (config.get<string>('jwt.accessToken.expiresIn') ??
+            '15m') as JwtSignOptions['expiresIn'],
+        },
+      }),
+    }),
   ],
   providers: [
     WhatsappAuthDriver,
@@ -72,6 +84,7 @@ const authModels = [Tenant, ApiKey, Collaborator, CollaboratorSession];
     WhatsappWebhookDriver,
     TenantDriver,
     ApiKeyDriver,
+    JwtModule,
     CollaboratorDriver,
     CollaboratorSessionDriver,
   ],
