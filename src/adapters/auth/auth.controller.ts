@@ -1,19 +1,29 @@
-import { Body, Controller, Delete, Param, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Request } from 'express';
+import type { Request } from 'express';
 import { ResponseHttp } from '../../core/common/entity/response-http.model';
 import { CreateTenantUseCase } from '../../core/auth/use-cases/create-tenant.uc';
 import { CreateApiKeyUseCase } from '../../core/auth/use-cases/create-api-key.uc';
 import { LoginCollaboratorUseCase } from '../../core/auth/use-cases/login-collaborator.uc';
 import { RefreshTokenUseCase } from '../../core/auth/use-cases/refresh-token.uc';
 import { RevokeSessionUseCase } from '../../core/auth/use-cases/revoke-session.uc';
+import { CreateCollaboratorUseCase } from '../../core/auth/use-cases/create-collaborator.uc';
 import { CreateTenantDto } from './dto/create-tenant.dto';
 import { CreateApiKeyDto } from './dto/create-api-key.dto';
 import { LoginCollaboratorDto } from './dto/login-collaborator.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
+import { CreateCollaboratorDto } from './dto/create-collaborator.dto';
 import { JwtAuthGuard } from '../lib/jwt-auth.guard';
 import { CollaboratorContext } from '../lib/collaborator-context.decorator';
-import { IcollaboratorContext } from '../../core/auth/entity/collaborator.entity';
+import type { IcollaboratorContext } from '../../core/auth/entity/collaborator.entity';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -24,6 +34,7 @@ export class AuthController {
     private readonly loginCollaboratorUseCase: LoginCollaboratorUseCase,
     private readonly refreshTokenUseCase: RefreshTokenUseCase,
     private readonly revokeSessionUseCase: RevokeSessionUseCase,
+    private readonly createCollaboratorUseCase: CreateCollaboratorUseCase,
   ) {}
 
   @Post('tenants')
@@ -44,7 +55,8 @@ export class AuthController {
 
   @Post('collaborators/login')
   @ApiOperation({
-    summary: 'Login de colaborador — retorna accessToken (15 min) y refreshToken (7 días)',
+    summary:
+      'Login de colaborador — retorna accessToken (15 min) y refreshToken (7 días)',
   })
   async loginCollaborator(
     @Body() dto: LoginCollaboratorDto,
@@ -71,7 +83,8 @@ export class AuthController {
 
   @Post('collaborators/refresh')
   @ApiOperation({
-    summary: 'Rota el refreshToken — revoca el anterior y emite un nuevo par de tokens',
+    summary:
+      'Rota el refreshToken — revoca el anterior y emite un nuevo par de tokens',
   })
   async refreshToken(@Body() dto: RefreshTokenDto): Promise<ResponseHttp> {
     const result = await this.refreshTokenUseCase.execute(dto.refreshToken);
@@ -90,6 +103,26 @@ export class AuthController {
     const result = await this.revokeSessionUseCase.execute({
       sessionId: Number(sessionId),
       collaboratorId: collaboratorContext.collaboratorId,
+    });
+    return new ResponseHttp(result.status, result);
+  }
+
+  @Post('collaborators')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({
+    summary: 'Crea un colaborador dentro del tenant (solo OWNER)',
+  })
+  async createCollaborator(
+    @Body() dto: CreateCollaboratorDto,
+    @CollaboratorContext() ctx: IcollaboratorContext,
+  ): Promise<ResponseHttp> {
+    const result = await this.createCollaboratorUseCase.execute({
+      tenantId: ctx.tenantId,
+      executorRole: ctx.role,
+      email: dto.email,
+      name: dto.name,
+      password: dto.password,
+      role: dto.role,
     });
     return new ResponseHttp(result.status, result);
   }
