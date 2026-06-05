@@ -11,7 +11,8 @@ export type TreponseCode =
   | 'UPDATE_OK'
   | 'CREATED'
   | 'CREATE_OK'
-  | 'FORBIDDEN';
+  | 'FORBIDDEN'
+  | 'UNAUTHORIZED';
 
 export const RESPONSE_CODE: Record<TreponseCode, IresponseCode> = {
   400: {
@@ -68,5 +69,10 @@ export const RESPONSE_CODE: Record<TreponseCode, IresponseCode> = {
     code: 'FORBIDDEN',
     message: 'No tiene permisos para realizar esta operación.',
     status: 403,
+  },
+  UNAUTHORIZED: {
+    code: 'UNAUTHORIZED',
+    message: 'Credenciales inválidas o acceso no autorizado.',
+    status: 401,
   },
 };
