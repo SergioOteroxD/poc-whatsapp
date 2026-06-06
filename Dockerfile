@@ -6,14 +6,14 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies
-RUN npm ci
+# Force dev deps install even if NODE_ENV=production is injected by the platform
+RUN npm ci --include=dev
 
 # Copy source code
 COPY . .
 
 # Build the application
-RUN node node_modules/@nestjs/cli/bin/nest.js build
+RUN npm run build
 
 # Production stage
 FROM node:20-alpine AS production
