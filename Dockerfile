@@ -13,7 +13,7 @@ RUN npm ci
 COPY . .
 
 # Build the application
-RUN npm run build
+RUN ./node_modules/.bin/nest build
 
 # Production stage
 FROM node:20-alpine AS production
