@@ -40,10 +40,8 @@ async function bootstrap() {
 
   // Configuración de Swagger/OpenAPI
   const config = new DocumentBuilder()
-    .setTitle('Stream head seller API')
-    .setDescription(
-      'API REST para la gestión de streaming head sellers y suscripciones.',
-    )
+    .setTitle('Whatsapp API')
+    .setDescription('API REST para la gestión de whatsapp.')
     .setVersion('1.0')
     .addBearerAuth()
     .build();

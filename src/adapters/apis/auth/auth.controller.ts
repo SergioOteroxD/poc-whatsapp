@@ -1,8 +1,8 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { ResponseHttp } from '../../core/common/entity/response-http.model';
-import { CreateTenantUseCase } from '../../core/auth/use-cases/create-tenant.uc';
-import { CreateApiKeyUseCase } from '../../core/auth/use-cases/create-api-key.uc';
+import { ResponseHttp } from '../../../core/common/entity/response-http.model';
+import { CreateTenantUseCase } from '../../../core/auth/use-cases/create-tenant.uc';
+import { CreateApiKeyUseCase } from '../../../core/auth/use-cases/create-api-key.uc';
 import { CreateTenantDto } from './dto/create-tenant.dto';
 import { CreateApiKeyDto } from './dto/create-api-key.dto';
 

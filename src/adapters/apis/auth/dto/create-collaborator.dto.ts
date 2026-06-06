@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsEnum, IsString, Length } from 'class-validator';
-import { EAuthCollaboratorRole } from '../../../commons/enum/auth/collaborator-role.enum';
+import { EAuthCollaboratorRole } from '../../../../commons/enum/auth/collaborator-role.enum';
 
 export class CreateCollaboratorDto {
   @ApiProperty({ description: 'Email del colaborador', example: 'agente@empresa.com' })

@@ -7,7 +7,7 @@ import {
   IsString,
   Length,
 } from 'class-validator';
-import { EAuthApikeyScope } from '../../../commons/enum/auth/apikey-scope.enum';
+import { EAuthApikeyScope } from '../../../../commons/enum/auth/apikey-scope.enum';
 
 export class CreateApiKeyDto {
   @ApiProperty({ example: 1 })

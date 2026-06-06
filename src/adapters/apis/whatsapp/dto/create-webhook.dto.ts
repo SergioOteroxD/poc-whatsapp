@@ -8,7 +8,7 @@ import {
   IsUrl,
   Length,
 } from 'class-validator';
-import { EWhatsappWebhookEvent } from '../../../commons/enum/whatsapp/whatsapp-webhook-event.enum';
+import { EWhatsappWebhookEvent } from '../../../../commons/enum/whatsapp/whatsapp-webhook-event.enum';
 
 export class CreateWebhookDto {
   @ApiProperty({

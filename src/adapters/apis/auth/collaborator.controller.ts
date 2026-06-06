@@ -12,18 +12,18 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import type { Request } from 'express';
-import { ResponseHttp } from '../../core/common/entity/response-http.model';
-import { LoginCollaboratorUseCase } from '../../core/auth/use-cases/login-collaborator.uc';
-import { RefreshTokenUseCase } from '../../core/auth/use-cases/refresh-token.uc';
-import { RevokeSessionUseCase } from '../../core/auth/use-cases/revoke-session.uc';
-import { CreateCollaboratorUseCase } from '../../core/auth/use-cases/create-collaborator.uc';
+import { ResponseHttp } from '../../../core/common/entity/response-http.model';
+import { LoginCollaboratorUseCase } from '../../../core/auth/use-cases/login-collaborator.uc';
+import { RefreshTokenUseCase } from '../../../core/auth/use-cases/refresh-token.uc';
+import { RevokeSessionUseCase } from '../../../core/auth/use-cases/revoke-session.uc';
+import { CreateCollaboratorUseCase } from '../../../core/auth/use-cases/create-collaborator.uc';
 import { LoginCollaboratorDto } from './dto/login-collaborator.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { LogoutCollaboratorDto } from './dto/logout-collaborator.dto';
 import { CreateCollaboratorDto } from './dto/create-collaborator.dto';
-import { JwtAuthGuard } from '../lib/jwt-auth.guard';
-import { CollaboratorContext } from '../lib/collaborator-context.decorator';
-import type { IcollaboratorContext } from '../../core/auth/entity/collaborator.entity';
+import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
+import { CollaboratorContext } from '../../decorator/collaborator-context.decorator';
+import type { IcollaboratorContext } from '../../../core/auth/entity/collaborator.entity';
 
 @ApiTags('Collaborators')
 @Controller()

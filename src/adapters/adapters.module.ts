@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { CoreModule } from '../core/core.module';
-import { AuthController } from './auth/auth.controller';
-import { CollaboratorController } from './auth/collaborator.controller';
-import { ApiKeyGuard } from './lib/api-key.guard';
-import { JwtAuthGuard } from './lib/jwt-auth.guard';
+import { AuthController } from './apis/auth/auth.controller';
+import { CollaboratorController } from './apis/auth/collaborator.controller';
+import { ApiKeyGuard } from './guards/api-key.guard';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { ExceptionManager } from './lib/exceptions-manager.filter';
 import { RequestHttpInterceptor } from './lib/request-http.interceptor';
-import { WhatsappController } from './whatsapp/whatsapp.controller';
+import { WhatsappController } from './apis/whatsapp/whatsapp.controller';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 
 @Module({
