@@ -13,7 +13,7 @@ RUN npm ci
 COPY . .
 
 # Build the application
-RUN ./node_modules/.bin/tsc -p tsconfig.build.json
+RUN node node_modules/@nestjs/cli/bin/nest.js build
 
 # Production stage
 FROM node:20-alpine AS production
