@@ -1,7 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsEnum, IsNumber, IsOptional, IsString, Length, Max, Min } from 'class-validator';
-import { EWhatsappSessionStatus } from '../../../commons/enum/whatsapp/whatsapp-session-status.enum';
+import { EWhatsappSessionStatus } from '../../../../commons/enum/whatsapp/whatsapp-session-status.enum';
 
 export class FilterSessionDto {
   @ApiPropertyOptional({ example: '573001234567', description: 'Número de teléfono con código de país' })
