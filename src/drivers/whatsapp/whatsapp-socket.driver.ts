@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
 /* eslint-disable @typescript-eslint/no-misused-promises */
@@ -23,6 +24,7 @@ import { WhatsappAuthDriver } from './whatsapp-auth.driver';
 import { WhatsappMessageDriver } from './whatsapp-message.driver';
 import { WhatsappSessionDriver } from './whatsapp-session.driver';
 import { WhatsappWebhookDriver } from './whatsapp-webhook.driver';
+import { randomInt } from 'crypto';
 
 @Injectable()
 export class WhatsappSocketDriver implements OnModuleInit {
@@ -311,7 +313,7 @@ export class WhatsappSocketDriver implements OnModuleInit {
 
     await sock.presenceSubscribe(jid);
     await sock.sendPresenceUpdate('composing', jid);
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+    await new Promise((resolve) => setTimeout(resolve, randomInt(1000, 5000)));
     await sock.sendPresenceUpdate('paused', jid);
 
     await sock.sendMessage(jid, { text });
