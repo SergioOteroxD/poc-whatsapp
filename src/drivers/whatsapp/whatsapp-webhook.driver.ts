@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { createHmac } from 'crypto';
 import { DataSource, Repository } from 'typeorm';
 import { EWhatsappWebhookEvent } from '../../commons/enum/whatsapp/whatsapp-webhook-event.enum';
 import { EWhatsappWebhookStatus } from '../../commons/enum/whatsapp/whatsapp-webhook-status.enum';
@@ -37,10 +36,12 @@ export class WhatsappWebhookDriver {
       secret: data.secret ?? null,
       events: data.events,
     });
-    return this.webhookRepo.save(entity);
+    return await this.webhookRepo.save(entity);
   }
 
-  async findAll(filter: IwebhookFindAllInput): Promise<[WhatsappWebhook[], number]> {
+  async findAll(
+    filter: IwebhookFindAllInput,
+  ): Promise<[WhatsappWebhook[], number]> {
     const { sessionId, isActive, page = 1, limit = 10 } = filter;
     const qb = this.webhookRepo
       .createQueryBuilder('w')
@@ -50,7 +51,7 @@ export class WhatsappWebhookDriver {
       qb.andWhere('w.isActive = :isActive', { isActive });
     }
 
-    return qb
+    return await qb
       .orderBy('w.createdAt', 'DESC')
       .skip((page - 1) * limit)
       .take(limit)
@@ -61,7 +62,7 @@ export class WhatsappWebhookDriver {
     sessionId: number,
     event: EWhatsappWebhookEvent,
   ): Promise<WhatsappWebhook[]> {
-    return this.webhookRepo
+    return await this.webhookRepo
       .createQueryBuilder('w')
       .where('w.sessionId = :sessionId', { sessionId })
       .andWhere('w.isActive = true')
@@ -91,10 +92,7 @@ export class WhatsappWebhookDriver {
       };
 
       if (webhook.secret) {
-        const sig = createHmac('sha256', webhook.secret)
-          .update(body)
-          .digest('hex');
-        headers['X-Webhook-Signature'] = `sha256=${sig}`;
+        headers['x-api-key'] = webhook.secret;
       }
 
       const response = await fetch(webhook.url, {

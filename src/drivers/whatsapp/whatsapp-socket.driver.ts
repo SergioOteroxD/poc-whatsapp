@@ -204,6 +204,8 @@ export class WhatsappSocketDriver implements OnModuleInit {
     const messageType = this.mapMessageType(contentType);
     const body = this.extractBody(msg.message ?? null);
 
+    if (fromMe) return;
+
     const saved = await this.messageDriver.saveIfNotExists({
       sessionId,
       waMessageId: msg.key.id!,
@@ -221,8 +223,6 @@ export class WhatsappSocketDriver implements OnModuleInit {
       rawPayload: msg as unknown as Record<string, unknown>,
       timestampWa: new Date(Number(msg.messageTimestamp ?? 0) * 1000),
     });
-
-    if (fromMe) return;
 
     const webhooks = await this.webhookDriver.findActiveBySessionAndEvent(
       sessionId,
